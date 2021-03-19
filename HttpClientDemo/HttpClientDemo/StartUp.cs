@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +15,7 @@ namespace HttpClientDemo
     public class StartUp
     {
         const string NewLine = "\r\n";
+        static Dictionary<string, int> SessionStorage = new Dictionary<string, int>();
 
         static async Task Main(string[] args)
         {
@@ -38,16 +41,31 @@ namespace HttpClientDemo
                     Encoding.UTF8.GetString(buffer, 0, lenght);
                 Console.WriteLine(requestString);
 
-                string html = $"<h1>Hello from NikiServer {DateTime.Now}</h1>" +
+                var sid = Guid.NewGuid().ToString();
+                var match = Regex.Match(requestString, @"sid=[^\n]*\r\n");
+                if (match.Success)
+                {
+                    sid = match.Value.Substring(4);
+                }
+
+                if (!SessionStorage.ContainsKey(sid))
+                {
+                    SessionStorage.Add(sid, 0);
+                }
+                SessionStorage[sid]++;
+
+                Console.WriteLine(sid);
+
+                string html = $"<h1>Hello from NikiServer {DateTime.Now} for the {SessionStorage[sid]} time</h1>" +
                     $"<form action=/tweet method=post><input name=username /><input name=password />" +
                     $"<input type=submit /></form>";
 
-                Thread.Sleep(5000);
 
                 string response = "HTTP/1.1 200 OK" + NewLine +
                     "Server: NikiServer 2020" + NewLine +
                     // "Location: https://www.google.com" + NewLine +
                     "Content-Type: text/html; charset=utf-8" + NewLine +
+                    $"Set-Cookie: sid={sid}; Expires=" + DateTime.UtcNow.AddDays(1).ToString("R") + NewLine +
                     // "Content-Disposition: attachment; filename=niki.txt" + NewLine +
                     "Content-Lenght: " + html.Length + NewLine +
                     NewLine +
