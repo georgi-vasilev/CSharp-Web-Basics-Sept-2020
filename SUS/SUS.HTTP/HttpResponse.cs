@@ -6,6 +6,12 @@
 
     public class HttpResponse
     {
+        public HttpResponse(HttpStatusCode statuscode)
+        {
+            this.StatusCode = statuscode;
+            this.Headers = new List<Header>();
+            this.Cookies = new List<Cookie>();
+        }
         public HttpResponse(string ContentType, byte[] body, HttpStatusCode statuscode = HttpStatusCode.Ok)
         {
             if (body == null)

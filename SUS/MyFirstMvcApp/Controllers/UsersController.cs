@@ -14,5 +14,15 @@
         {
             return this.View();
         }
+
+        public HttpResponse DoLogin(HttpRequest arg)
+        {
+            //TODO: read data
+            //TODO: check user
+            //TODO: log user
+            //TODO: home page
+
+            return this.Redirect("/");
+        }
     }
 }
