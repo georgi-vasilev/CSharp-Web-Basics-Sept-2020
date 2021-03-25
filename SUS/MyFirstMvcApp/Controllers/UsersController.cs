@@ -1,21 +1,22 @@
-﻿namespace MyFirstMvcApp.Controllers
+﻿namespace BattleCards.Controllers
 {
     using SUS.HTTP;
     using SUS.MvcFramework;
 
     public class UsersController : Controller
     {
-        public HttpResponse Register(HttpRequest request)
+        public HttpResponse Register()
         {
             return this.View();
         }
 
-        public HttpResponse Login(HttpRequest request)
+        public HttpResponse Login()
         {
             return this.View();
         }
 
-        public HttpResponse DoLogin(HttpRequest arg)
+        [HttpPost]
+        public HttpResponse DoLogin()
         {
             //TODO: read data
             //TODO: check user
