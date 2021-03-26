@@ -1,18 +1,19 @@
 ﻿namespace BattleCards.Controllers
 {
-    using BattleCards.Services;
+    using System.Text.RegularExpressions;
+    using System.ComponentModel.DataAnnotations;
+
     using SUS.HTTP;
     using SUS.MvcFramework;
-    using System.ComponentModel.DataAnnotations;
-    using System.Text.RegularExpressions;
+    using BattleCards.Services;
 
     public class UsersController : Controller
     {
-        private UsersService userService;
+        private readonly IUsersService userService;
 
-        public UsersController()
+        public UsersController(IUsersService userService)
         {
-            this.userService = new UsersService();
+            this.userService = userService;
         }
 
         public HttpResponse Register()

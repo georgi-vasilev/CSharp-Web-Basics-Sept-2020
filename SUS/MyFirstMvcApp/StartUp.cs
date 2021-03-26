@@ -7,6 +7,7 @@
     using SUS.HTTP;
     using SUS.MvcFramework;
     using BattleCards.Data;
+    using BattleCards.Services;
 
     public class StartUp : IMvcApplication
     {
@@ -15,8 +16,13 @@
             new ApplicationDbContext().Database.Migrate();
         }
 
-        public void ConfigureServices()
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
+            //AddSingleton
+            //AddTransient
+            //AddScoped
+            serviceCollection.Add<IUsersService, UsersService>();
+            serviceCollection.Add<ICardsService, CardsService>();
         }
     }
 }
