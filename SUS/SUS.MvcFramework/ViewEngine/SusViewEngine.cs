@@ -14,11 +14,11 @@
 
     public class SusViewEngine : IViewEngine
     {
-        public string GetHtml(string templateCode, object viewModel)
+        public string GetHtml(string templateCode, object viewModel, string user)
         {
             string csharpCode = GenerateCSharpFromTemplate(templateCode, viewModel);
             IView executableObject = GenerateExecutableCоde(csharpCode, viewModel);
-            string html = executableObject.ExecuteTemplate(viewModel); // M
+            string html = executableObject.ExecuteTemplate(viewModel, user);
             return html;
         }
 
@@ -50,8 +50,9 @@ namespace ViewNamespace
 {
     public class ViewClass : IView
     {
-        public string ExecuteTemplate(object viewModel)
+        public string ExecuteTemplate(object viewModel, string user)
         {
+            var User = user;
             var Model = viewModel as " + typeOfModel + @";
             var html = new StringBuilder();
             " + GetMethodBody(templateCode) + @"
@@ -113,8 +114,18 @@ namespace ViewNamespace
                 .AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location));
             if (viewModel != null)
             {
-                compileResult = compileResult
-                    .AddReferences(MetadataReference.CreateFromFile(viewModel.GetType().Assembly.Location));
+                if (viewModel.GetType().IsGenericType)
+                {
+                    var genericArguments = viewModel.GetType().GenericTypeArguments;
+                    foreach (var genericArgument in genericArguments)
+                    {
+                        compileResult = compileResult
+                    .AddReferences(MetadataReference.CreateFromFile(genericArgument.Assembly.Location));
+                    }
+                }
+
+                compileResult = compileResult.AddReferences(MetadataReference.CreateFromFile(viewModel.GetType().Assembly.Location));
+                
             }
 
             // loads all references for the standard dotnet functionality
