@@ -2,6 +2,7 @@
 {
     using BattleCards.Data;
     using BattleCards.ViewModels;
+    using BattleCards.ViewModels.Cards;
     using SUS.HTTP;
     using SUS.MvcFramework;
     using System.Linq;
@@ -24,7 +25,7 @@
         }
 
         [HttpPost("/Cards/Add")]
-        public HttpResponse DoAdd(string attack, string health, string description, string image, string name, string keyword)
+        public HttpResponse DoAdd(AddCardInputModel model)
         {
             if (!this.IsUserSignedIn())
             {
@@ -39,12 +40,12 @@
 
             this.db.Cards.Add(new Card
                 {
-                    Attack = int.Parse(attack),
-                    Health = int.Parse(health),
-                    Description = description,
-                    ImageUrl = image,
-                    Name = name,
-                    KeyWord = keyword,
+                    Attack = model.Attack,
+                    Health = model.Health,
+                    Description = model.Description,
+                    ImageUrl = model.Image,
+                    Name = model.Name,
+                    KeyWord = model.Keyword,
                 });
 
             this.db.SaveChanges();

@@ -78,15 +78,14 @@
         }
 
         [HttpPost("/Users/Login")]
-        public HttpResponse DoLogin()
+        public HttpResponse DoLogin(string username, string password)
         {
             if (this.IsUserSignedIn())
             {
                 return this.Redirect("/");
             }
-            var username = this.Request.FormData["username"];
-            var passowrd = this.Request.FormData["password"];
-            var userId = this.userService.GetUserId(username, passowrd);
+
+            var userId = this.userService.GetUserId(username, password);
             if (userId == null)
             {
                 return this.Error("Invalid username or password");
