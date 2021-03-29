@@ -1,13 +1,11 @@
-﻿using Git.Services;
-using SUS.HTTP;
-using SUS.MvcFramework;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace Git.Controllers
+﻿namespace Git.Controllers
 {
+    using System.ComponentModel.DataAnnotations;
+
+    using Git.Services;
+    using SUS.HTTP;
+    using SUS.MvcFramework;
+
     public class UsersController : Controller
     {
         private readonly IUsersService service;

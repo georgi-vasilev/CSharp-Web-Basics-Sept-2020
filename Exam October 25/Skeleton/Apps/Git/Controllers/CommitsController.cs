@@ -1,11 +1,10 @@
-﻿using Git.Services;
-using Git.ViewModels;
-using SUS.HTTP;
-using SUS.MvcFramework;
-using System.Linq;
-
-namespace Git.Controllers
+﻿namespace Git.Controllers
 {
+    using Git.Services;
+    using Git.ViewModels;
+    using SUS.HTTP;
+    using SUS.MvcFramework;
+
     public class CommitsController : Controller
     {
         private readonly ICommitsService service;
@@ -34,7 +33,7 @@ namespace Git.Controllers
         }
 
         [HttpPost]
-        public HttpResponse Create(string description, string id, string repoId)
+        public HttpResponse Create(string description, string id)
         {
             if (!this.IsUserSignedIn())
             {
@@ -47,7 +46,7 @@ namespace Git.Controllers
             }
 
             var userId = this.GetUserId();
-            this.service.Create(description,id, userId, repoId);
+            this.service.Create(description, id, userId);
 
             return this.Redirect("/Repositories/All");
         }

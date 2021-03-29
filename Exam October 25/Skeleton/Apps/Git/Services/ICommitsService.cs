@@ -6,7 +6,7 @@
 
     public interface ICommitsService
     {
-        string Create(string description, string id, string userId, string repoId);
+        string Create(string description, string id, string userId);
 
         void Delete(string id, string userId);
 

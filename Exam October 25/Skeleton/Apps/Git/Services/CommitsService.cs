@@ -1,11 +1,14 @@
-﻿using Git.Data;
-using Git.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Git.Services
+﻿namespace Git.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Microsoft.EntityFrameworkCore;
+
+    using Git.Data;
+    using Git.ViewModels;
+
     public class CommitsService : ICommitsService
     {
         private readonly ApplicationDbContext db;
@@ -15,21 +18,13 @@ namespace Git.Services
             this.db = db;
         }
 
-        //TODO: bug with the repo id 
-        public string Create(string description, string id, string userId, string repoId)
+        public string Create(string description, string repoId, string userId)
         {
-            var repo = this.db.Repositories
-                .Where(x => x.Commits.Any(x => x.RepositoryId == id))
-                .FirstOrDefault();
-
-            var creator = this.db.Users.Where(x => x.Id == userId)
-                .FirstOrDefault();
-
             var commit = new Commit
             {
                 CreatedOn = DateTime.UtcNow,
                 Description = description,
-                CreatorId = creator.Id,
+                CreatorId = userId,
                 RepositoryId = repoId,
             };
 
@@ -53,7 +48,7 @@ namespace Git.Services
 
         public IEnumerable<CommitsViewModel> GetAll()
         {
-            return this.db.Commits.Select(x => new CommitsViewModel
+            return this.db.Commits.Include(x => x.Repository).Select(x => new CommitsViewModel
             {
                 Id = x.Id,
                 Name = x.Repository.Name,
